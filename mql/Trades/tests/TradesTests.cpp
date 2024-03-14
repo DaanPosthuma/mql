@@ -3,14 +3,16 @@
 
 namespace {
 
-  using namespace mql::Literals;
-  using mql::Trades::Cashflow;
+  using namespace mql::literals;
+  using mql::trades::Cashflow;
   using mql::DateTime;
   using namespace std::chrono;
 
   TEST_CASE("Test cashflow trade") {
 
-    auto cashflow = Cashflow(50.0_usd, DateTime(January / 10 / 1984));
+    auto const cashflow = Cashflow(50.0_usd, DateTime(January / 10 / 1984));
+    //auto const [currency, amount] = cashflow.GetCurrencyAmount();
+    //REQUIRE(.GetAmount());
 
   }
 

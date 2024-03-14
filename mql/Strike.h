@@ -23,7 +23,7 @@ namespace mql {
     return ostr;
   }
 
-  inline namespace Literals {
+  inline namespace literals {
 
     constexpr Strike operator""_K(long double strike)
     {

@@ -2,7 +2,7 @@
 
 #include "ATMVolCurve.h"
 
-namespace mql::ATMVolCurves {
+namespace mql::atm_vol_curves {
 
   using mql::DateTime;
   using mql::Volatility;
@@ -34,7 +34,7 @@ namespace mql::ATMVolCurves {
     template <ATMVolCurve ATMVolCurveT>
     class ATMVolCurveHolder : public ATMVolCurveHolderBase {
     public:
-      ATMVolCurveHolder(ATMVolCurveT&& curve) : mATMVolCurve(std::move(curve)) {}
+      ATMVolCurveHolder(ATMVolCurveT&& curve) noexcept : mATMVolCurve(std::move(curve)) {}
 
       virtual Volatility getATMVol(DateTime dateTime) const override {
         return mATMVolCurve.getATMVol(dateTime);

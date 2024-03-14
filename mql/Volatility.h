@@ -23,7 +23,7 @@ namespace mql {
     return ostr;
   }
 
-  inline namespace Literals {
+  inline namespace literals {
 
     constexpr Volatility operator""_vol(long double volatility)
     {

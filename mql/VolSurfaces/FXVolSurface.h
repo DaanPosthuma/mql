@@ -6,15 +6,15 @@
 
 namespace mql::VolSurfaces {
 
-    using mql::ATMVolCurves::ATMVolCurve;
+    using mql::atm_vol_curves::ATMVolCurve;
     using mql::DateTime;
 
     template <ATMVolCurve ATMVolCurveT>
     class FXVolatilitySurface {
     public:
-        FXVolatilitySurface(ATMVolCurveT atmVolCurve) : mATMVolCurve(std::move(atmVolCurve)) {}
+        FXVolatilitySurface(ATMVolCurveT atmVolCurve) noexcept : mATMVolCurve(std::move(atmVolCurve)) {}
 
-        Volatility getVolatility(DateTime dateTime, Strike strike) const {
+        Volatility getVolatility(DateTime dateTime, Strike strike) const noexcept {
             return mATMVolCurve.getATMVol(dateTime);
         }
 

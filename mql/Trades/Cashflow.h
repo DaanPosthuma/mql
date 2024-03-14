@@ -3,11 +3,13 @@
 #include "DateTime.h"
 #include "CurrencyAmount.h"
 
-namespace mql::Trades {
+namespace mql::trades {
 
   class Cashflow {
   public:
-    Cashflow(CurrencyAmount currencyAmount, DateTime paymentDateTime) : mCurrencyAmount(currencyAmount), mPaymentDateTime(paymentDateTime) {}
+    Cashflow(CurrencyAmount currencyAmount, DateTime paymentDateTime) noexcept : mCurrencyAmount(currencyAmount), mPaymentDateTime(paymentDateTime) {}
+    auto const& GetCurrencyAmount() const noexcept { return mCurrencyAmount; }
+    auto const& GetPaymentDateTime() const noexcept { return mPaymentDateTime; }
 
   private:
     CurrencyAmount mCurrencyAmount;

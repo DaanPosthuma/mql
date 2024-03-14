@@ -4,7 +4,7 @@
 
 #include <variant>
 
-namespace mql::ATMVolCurves {
+namespace mql::atm_vol_curves {
 
   using mql::DateTime;
   using mql::Volatility;

@@ -5,8 +5,8 @@
 #include "Volatility.h"
 #include <catch2/catch_test_macros.hpp>
 
-using namespace mql::ATMVolCurves;
-using namespace mql::Literals;
+using namespace mql::atm_vol_curves;
+using namespace mql::literals;
 using namespace std::chrono;
 
 namespace {

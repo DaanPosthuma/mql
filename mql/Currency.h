@@ -6,7 +6,7 @@ namespace mql {
 
   class Currency {
   public:
-    constexpr explicit Currency(std::string currency) : mCurrency(currency) {}
+    constexpr explicit Currency(std::string currency) noexcept : mCurrency(currency) {}
   private:
     friend std::ostream& operator<<(std::ostream& ostr, Currency volatility);
     friend bool operator==(Currency lhs, Currency rhs);
@@ -24,7 +24,7 @@ namespace mql {
     return ostr;
   }
 
-  inline namespace Literals {
+  inline namespace literals {
 
     constexpr Currency operator""_ccy(char const* currency, std::size_t)
     {

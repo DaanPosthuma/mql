@@ -3,9 +3,9 @@
 #include "VolSurfaces/FXVolSurface.h"
 #include <catch2/catch_test_macros.hpp>
 
-using namespace mql::ATMVolCurves;
+using namespace mql::atm_vol_curves;
 using namespace mql::VolSurfaces;
-using namespace mql::Literals;
+using namespace mql::literals;
 using namespace std::chrono;
 
 namespace {
