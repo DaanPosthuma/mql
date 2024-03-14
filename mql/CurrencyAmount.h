@@ -1,21 +1,21 @@
 #pragma once
 
 #include "Currency.h"
+#include "Amount.h"
 #include <ostream>
+#include <tuple>
 
 namespace mql {
 
   class CurrencyAmount {
   public:
     Currency currency;
-    double amount;
+    Amount amount;
 
-    constexpr explicit CurrencyAmount(Currency currency, double amount) noexcept : currency(currency), amount(amount) {}
+    constexpr explicit CurrencyAmount(Currency currency, Amount amount) noexcept : currency(currency), amount(amount) {}
 
-    // Tuple size specialization
     static constexpr size_t tuple_size = 2;
 
-    // Tuple element specialization
     template<std::size_t N>
     struct tuple_element;
 
@@ -29,7 +29,6 @@ namespace mql {
       using type = decltype(amount);
     };
 
-    // Get function
     template<std::size_t N>
     auto get() const {
       if constexpr (N == 0)
@@ -39,7 +38,7 @@ namespace mql {
     }
 
   private:
-    friend std::ostream& operator<<(std::ostream& ostr, CurrencyAmount volatility) noexcept;
+    friend std::ostream& operator<<(std::ostream& ostr, CurrencyAmount currencyAmount) noexcept;
     friend bool operator==(CurrencyAmount lhs, CurrencyAmount rhs) noexcept;
 
     auto tie() const noexcept {
@@ -51,8 +50,8 @@ namespace mql {
     return lhs.tie() == rhs.tie();
   }
 
-  inline std::ostream& operator<<(std::ostream& ostr, CurrencyAmount volatility) noexcept {
-    ostr << "CurrencyAmount(" << volatility.currency << volatility.amount << ")";
+  inline std::ostream& operator<<(std::ostream& ostr, CurrencyAmount currencyAmount) noexcept {
+    ostr << "CurrencyAmount(" << currencyAmount.currency << currencyAmount.amount << ")";
     return ostr;
   }
 
