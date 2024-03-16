@@ -2,24 +2,24 @@
 
 #include "../Strike.h"
 #include "../Volatility.h"
-#include "../ATMVolCurves/ATMVolCurve.h"
+#include "../VolCurves/VolCurve.h"
 
 namespace mql::VolSurfaces {
 
-    using mql::atm_vol_curves::ATMVolCurve;
+    using mql::vol_curves::VolCurve;
     using mql::DateTime;
 
-    template <ATMVolCurve ATMVolCurveT>
+    template <VolCurve VolCurveT>
     class FXVolatilitySurface {
     public:
-        FXVolatilitySurface(ATMVolCurveT atmVolCurve) noexcept : mATMVolCurve(std::move(atmVolCurve)) {}
+        FXVolatilitySurface(VolCurveT VolCurve) noexcept : mVolCurve(std::move(VolCurve)) {}
 
         Volatility getVolatility(DateTime dateTime, Strike strike) const noexcept {
-            return mATMVolCurve.getATMVol(dateTime);
+            return mVolCurve.getVol(dateTime);
         }
 
     private:
-        ATMVolCurveT mATMVolCurve;
+        VolCurveT mVolCurve;
     };
 
 }

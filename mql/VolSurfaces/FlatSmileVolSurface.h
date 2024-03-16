@@ -1,24 +1,24 @@
 #pragma once
 
 #include "../Strike.h"
-#include "../ATMVolCurves/ATMVolCurve.h"
+#include "../VolCurves/VolCurve.h"
 
 namespace mql::VolSurfaces {
 
-    using mql::atm_vol_curves::ATMVolCurve;
+    using mql::vol_curves::VolCurve;
     using mql::DateTime;
     
-    template <ATMVolCurve ATMVolCurveT>
+    template <VolCurve VolCurveT>
     class FlatSmileVolatilitySurface {
     public:
-        FlatSmileVolatilitySurface(ATMVolCurveT atmVolCurve) noexcept : mATMVolCurve(std::move(atmVolCurve)) {}
+        FlatSmileVolatilitySurface(VolCurveT VolCurve) noexcept : mVolCurve(std::move(VolCurve)) {}
 
         Volatility getVolatility(DateTime dateTime, Strike strike) const noexcept {
-            return mATMVolCurve.getATMVol(dateTime);
+            return mVolCurve.getVol(dateTime);
         }
 
     private:
-        ATMVolCurveT mATMVolCurve;
+        VolCurveT mVolCurve;
     };
 
 }

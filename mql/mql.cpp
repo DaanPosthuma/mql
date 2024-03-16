@@ -1,7 +1,7 @@
-﻿#include "ATMVolCurves/FlatATMVolCurve.h"
-#include "ATMVolCurves/PiecewiseFlatATMVolCurve.h"
-#include "ATMVolCurves/PolymorphicATMVolCurve.h"
-#include "ATMVolCurves/MultiTypeATMVolCurve.h"
+﻿#include "VolCurves/FlatVolCurve.h"
+#include "VolCurves/PiecewiseFlatVolCurve.h"
+#include "VolCurves/PolymorphicVolCurve.h"
+#include "VolCurves/MultiTypeVolCurve.h"
 #include "VolSurfaces/FXVolSurface.h"
 
 #include <iostream>
