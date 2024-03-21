@@ -25,7 +25,7 @@ namespace mql {
 
   inline namespace literals {
 
-    constexpr Volatility operator""_vol(long double volatility)
+    consteval Volatility operator""_vol(long double volatility)
     {
       return Volatility(volatility);
     }

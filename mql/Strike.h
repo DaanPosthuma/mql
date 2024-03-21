@@ -8,7 +8,7 @@ namespace mql {
   public:
     explicit constexpr Strike(double strike) : mStrike(strike) {}
   private:
-    friend std::ostream& operator<<(std::ostream& ostr, Strike volatility);
+    friend std::ostream& operator<<(std::ostream& ostr, Strike strike);
     friend bool operator==(Strike lhs, Strike rhs);
 
     double mStrike;
@@ -18,14 +18,14 @@ namespace mql {
     return lhs.mStrike == rhs.mStrike;
   }
 
-  inline std::ostream& operator<<(std::ostream& ostr, Strike volatility) {
-    ostr << "strike(" << volatility.mStrike << ")";
+  inline std::ostream& operator<<(std::ostream& ostr, Strike strike) {
+    ostr << "strike(" << strike.mStrike << ")";
     return ostr;
   }
 
   inline namespace literals {
 
-    constexpr Strike operator""_K(long double strike)
+    consteval Strike operator""_K(long double strike)
     {
       return Strike(strike);
     }

@@ -61,6 +61,18 @@ namespace mql {
     return lhs.tie() == rhs.tie();
   }
 
+  inline CurrencyAmountDateTime operator+(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
+    if (lhs.currency != rhs.currency) throw std::logic_error("Currencies not the same");
+    if (lhs.dateTime != rhs.dateTime) throw std::logic_error("Dates not the same");
+    return CurrencyAmountDateTime(lhs.currency, lhs.amount + rhs.amount, lhs.dateTime);
+  }
+
+  inline CurrencyAmountDateTime operator-(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
+    if (lhs.currency != rhs.currency) throw std::logic_error("Currencies not the same");
+    if (lhs.dateTime != rhs.dateTime) throw std::logic_error("Dates not the same");
+    return CurrencyAmountDateTime(lhs.currency, lhs.amount - rhs.amount, lhs.dateTime);
+  }
+
   inline std::ostream& operator<<(std::ostream& ostr, CurrencyAmountDateTime cadt) noexcept {
     ostr << "CurrencyAmountDateTime(" << cadt.currency << ", " << cadt.amount << ", " << cadt.dateTime << ")";
     return ostr;

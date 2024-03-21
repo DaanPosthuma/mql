@@ -1,19 +1,19 @@
 #pragma once
 
-#include "VolCurve.h"
+#include "VolatilityCurve.h"
 
 #include <map>
 
-namespace mql::vol_curves {
+namespace mql::volatility_curves {
 
   using mql::DateTime;
   using mql::Volatility;
 
-  class PiecewiseFlatVolCurve {
+  class PiecewiseFlatVolatilityCurve {
   public:
-    PiecewiseFlatVolCurve(std::map<DateTime, Volatility> termStructure) : mTermStructure(std::move(termStructure)) {}
+    PiecewiseFlatVolatilityCurve(std::map<DateTime, Volatility> termStructure) : mTermStructure(std::move(termStructure)) {}
 
-    Volatility getVol(DateTime time) const {
+    [[nodiscard]] Volatility getVolatility(DateTime time) const {
       if (time < mTermStructure.begin()->first) throw std::exception();
       return std::prev(mTermStructure.upper_bound(time))->second;
     }
@@ -21,8 +21,6 @@ namespace mql::vol_curves {
   private:
     std::map<DateTime, Volatility> mTermStructure;
   };
-
-  static_assert(VolCurve<FlatVolCurve>);
 
 }
 

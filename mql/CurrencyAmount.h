@@ -57,14 +57,19 @@ namespace mql {
 
   inline namespace literals {
 
-    CurrencyAmount operator""_usd(long double amount) noexcept
-    {
-      return CurrencyAmount(Currency("USD"), amount);
-    }
-
-    CurrencyAmount operator""_usd(unsigned long long amount) noexcept
+    constexpr CurrencyAmount operator""_usd(unsigned long long amount) noexcept
     {
       return CurrencyAmount(Currency("USD"), static_cast<double>(amount));
+    }
+
+    constexpr CurrencyAmount operator""_eur(unsigned long long amount) noexcept
+    {
+      return CurrencyAmount(Currency("EUR"), static_cast<double>(amount));
+    }
+
+    constexpr CurrencyAmount operator""_gbp(unsigned long long amount) noexcept
+    {
+      return CurrencyAmount(Currency("GBP"), static_cast<double>(amount));
     }
 
   }

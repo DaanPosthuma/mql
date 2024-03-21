@@ -5,15 +5,15 @@
 
 #include <concepts>
 
-namespace mql::vol_curves {
+namespace mql::volatility_curves {
 
   using mql::DateTime;
   using mql::Volatility;
 
   template <typename T>
-  concept VolCurve = requires(T a, DateTime dateTime)
+  concept VolatilityCurve = requires(T a, DateTime dateTime)
   {
-    { a.getVol(dateTime) } -> std::same_as<Volatility>;
+    { a.getVolatility(dateTime) } -> std::same_as<Volatility>;
   };
 
 }

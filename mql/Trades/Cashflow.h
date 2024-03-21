@@ -1,19 +1,21 @@
 ﻿#pragma once
 
 #include "DateTime.h"
-#include "CurrencyAmountDateTime.h"
+#include "CurrencyAmount.h"
+#include "DateTime.h"
 
 namespace mql::trades {
 
   class Cashflow {
   public:
-    Cashflow(Currency currency, Amount amount, DateTime paymentDateTime) noexcept : mCurrencyAmountDateTime(currency, amount, paymentDateTime) {}
-    Cashflow(CurrencyAmount currencyAmount, DateTime paymentDateTime) noexcept : mCurrencyAmountDateTime(currencyAmount.currency, currencyAmount.amount, paymentDateTime) {}
-    Cashflow(CurrencyAmountDateTime currencyAmountDateTime) noexcept : mCurrencyAmountDateTime(currencyAmountDateTime) {}
-    auto const& GetCurrencyAmountDateTime() const noexcept { return mCurrencyAmountDateTime; }
+    Cashflow(CurrencyAmount currencyAmount, DateTime paymentDateTime) noexcept : mCurrencyAmount(currencyAmount), mPaymentDateTime(paymentDateTime) {}
+    
+    auto const& GetCurrencyAmount() const noexcept { return mCurrencyAmount; }
+    auto const& GetPaymentDateTime() const noexcept { return mPaymentDateTime; }
 
   private:
-    CurrencyAmountDateTime mCurrencyAmountDateTime;
+    CurrencyAmount mCurrencyAmount;
+    DateTime mPaymentDateTime;
 
   };
 
