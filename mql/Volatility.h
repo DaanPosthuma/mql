@@ -27,7 +27,7 @@ namespace mql {
 
     consteval Volatility operator""_vol(long double volatility)
     {
-      return Volatility(volatility);
+      return Volatility(static_cast<double>(volatility));
     }
 
   }

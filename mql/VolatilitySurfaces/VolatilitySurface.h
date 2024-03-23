@@ -6,7 +6,7 @@
 
 #include <concepts>
 
-namespace mql::vol_surfaces {
+namespace mql::volatility_surfaces {
 
   using mql::DateTime;
   using mql::Strike;

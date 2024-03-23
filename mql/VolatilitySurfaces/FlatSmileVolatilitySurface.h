@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Strike.h"
-#include "../VolatilityCurves/VolatilityCurve.h"
+#include "Strike.h"
+#include "VolatilityCurves/VolatilityCurve.h"
 
-namespace mql::vol_surfaces {
+namespace mql::volatility_surfaces {
 
     using mql::volatility_curves::VolatilityCurve;
     using mql::DateTime;

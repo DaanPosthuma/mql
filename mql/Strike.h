@@ -27,7 +27,7 @@ namespace mql {
 
     consteval Strike operator""_K(long double strike)
     {
-      return Strike(strike);
+      return Strike(static_cast<double>(strike));
     }
 
   }

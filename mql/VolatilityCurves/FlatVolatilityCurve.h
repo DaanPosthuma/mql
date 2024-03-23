@@ -12,6 +12,7 @@ namespace mql::volatility_curves {
     FlatVolatilityCurve(Volatility vol) : mVol(vol) {}
 
     [[nodiscard]] Volatility getVolatility(DateTime time) const noexcept {
+      (void)time;
       return mVol;
     }
 

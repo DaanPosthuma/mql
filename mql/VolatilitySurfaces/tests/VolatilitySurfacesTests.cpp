@@ -6,7 +6,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 using namespace mql::volatility_curves;
-using namespace mql::vol_surfaces;
+using namespace mql::volatility_surfaces;
 using namespace mql::literals;
 using namespace std::chrono;
 
