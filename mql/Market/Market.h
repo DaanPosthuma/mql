@@ -31,59 +31,27 @@ namespace mql {
     std::unordered_map<Key, Component> mStorage;
   };
 
-  template <template <class> class KeyTypeMapping, class... Components>
-  class Market : private MarketComponentHolder<typename KeyTypeMapping<Components>::KeyT, Components>... {
-  public:
-    
-    template <class ComponentT>
-    auto const& get(KeyTypeMapping<ComponentT>::KeyT const& key) const {
-      return MarketComponentHolder<KeyTypeMapping<ComponentT>::KeyT, ComponentT>::get(key);
-    }
-
-    template <class ComponentT>
-    auto& get(KeyTypeMapping<ComponentT>::KeyT const& key) {
-      return MarketComponentHolder<KeyTypeMapping<ComponentT>::KeyT, ComponentT>::get(key);
-    }
-    
-    template <class ComponentT>
-    void set(KeyTypeMapping<ComponentT>::KeyT const& key, ComponentT component) {
-      MarketComponentHolder<KeyTypeMapping<ComponentT>::KeyT, ComponentT>::set(key, std::move(component));
-    }
-
-  };
-
   inline namespace fx_market {
-
-    template <class ValueT>
-    struct KeyTypeMapping;
-
-    template <>
-    struct KeyTypeMapping<mql::Spot> {
-      using KeyT = mql::CurrencyPair;
-    };
-
-    template <>
-    struct KeyTypeMapping<mql::volatility_surfaces::FXVolatilitySurface<mql::volatility_curves::FlatVolatilityCurve>> {
-      using KeyT = mql::CurrencyPair;
-    };
 
     using SpotT = mql::Spot;
     using VolCurveT = mql::volatility_curves::FlatVolatilityCurve;
     using VolSurfT = mql::volatility_surfaces::FXVolatilitySurface<VolCurveT>;
 
-    class FXMarket : private Market<KeyTypeMapping,
-      SpotT,
-      VolSurfT> {
+    class FXMarket {
     public:
 
-      [[nodiscard]] SpotT const& GetSpot(KeyTypeMapping<SpotT>::KeyT const& key) const { return get<mql::Spot>(key); }
-      [[nodiscard]] VolSurfT const& GetVolatilitySurface(KeyTypeMapping<VolSurfT>::KeyT const& key) const { return get<VolSurfT>(key); }
+      [[nodiscard]] auto const& GetSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
+      [[nodiscard]] auto const& GetVolatilitySurface(mql::CurrencyPair const& key) const { return mVolSurfaces.get(key); }
 
-      [[nodiscard]] SpotT& GetSpot(KeyTypeMapping<SpotT>::KeyT const& key) { return get<mql::Spot>(key); }
-      [[nodiscard]] VolSurfT& GetVolatilitySurface(KeyTypeMapping<VolSurfT>::KeyT const& key) { return get<VolSurfT>(key); }
+      [[nodiscard]] auto& GetSpot(mql::CurrencyPair const& key) { return mSpots.get(key); }
+      [[nodiscard]] auto& GetVolatilitySurface(mql::CurrencyPair const& key) { return mVolSurfaces.get(key); }
 
-      void SetSpot(KeyTypeMapping<SpotT>::KeyT const& key, SpotT spot) { return set<SpotT>(key, spot); }
-      void SetVolatilitySurface(KeyTypeMapping<VolSurfT>::KeyT const& key, VolSurfT volatilitySurface) { return set<VolSurfT>(key, volatilitySurface); }
+      void SetSpot(mql::CurrencyPair const& key, SpotT spot) { return mSpots.set(key, std::move(spot)); }
+      void SetVolatilitySurface(mql::CurrencyPair const& key, VolSurfT volatilitySurface) { return mVolSurfaces.set(key, std::move(volatilitySurface)); }
+
+    private:
+      MarketComponentHolder<mql::CurrencyPair, SpotT> mSpots;
+      MarketComponentHolder<mql::CurrencyPair, VolSurfT> mVolSurfaces;
 
     };
   }
