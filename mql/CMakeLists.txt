@@ -1,6 +1,7 @@
-﻿add_library (mql mql.cpp "Market/Market.h" "CurrencyPair.h")
+﻿add_library (mql mql.cpp "Market/Market.h" "CurrencyPair.h" "DiscountFactor.h" "Rate.h")
 target_include_directories(mql PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_subdirectory (DiscountCurves)
 add_subdirectory (VolatilityCurves)
 add_subdirectory (VolatilitySurfaces)
 add_subdirectory (Trades)
