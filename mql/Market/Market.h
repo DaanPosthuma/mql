@@ -31,30 +31,28 @@ namespace mql {
     std::unordered_map<Key, Component> mStorage;
   };
 
-  inline namespace fx_market {
+  class FXMarket {
+  public:
+    
+    using Spot = mql::Spot;
+    using VolCurve = mql::volatility_curves::FlatVolatilityCurve;
+    using VolSurface = mql::volatility_surfaces::FXVolatilitySurface<VolCurve>;
 
-    using SpotT = mql::Spot;
-    using VolCurveT = mql::volatility_curves::FlatVolatilityCurve;
-    using VolSurfT = mql::volatility_surfaces::FXVolatilitySurface<VolCurveT>;
+    [[nodiscard]] auto const& GetSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
+    [[nodiscard]] auto const& GetVolatilitySurface(mql::CurrencyPair const& key) const { return mVolSurfaces.get(key); }
 
-    class FXMarket {
-    public:
+    [[nodiscard]] auto& GetSpot(mql::CurrencyPair const& key) { return mSpots.get(key); }
+    [[nodiscard]] auto& GetVolatilitySurface(mql::CurrencyPair const& key) { return mVolSurfaces.get(key); }
 
-      [[nodiscard]] auto const& GetSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
-      [[nodiscard]] auto const& GetVolatilitySurface(mql::CurrencyPair const& key) const { return mVolSurfaces.get(key); }
+    void SetSpot(mql::CurrencyPair const& key, Spot spot) { return mSpots.set(key, std::move(spot)); }
+    void SetVolatilitySurface(mql::CurrencyPair const& key, VolSurface volatilitySurface) { return mVolSurfaces.set(key, std::move(volatilitySurface)); }
 
-      [[nodiscard]] auto& GetSpot(mql::CurrencyPair const& key) { return mSpots.get(key); }
-      [[nodiscard]] auto& GetVolatilitySurface(mql::CurrencyPair const& key) { return mVolSurfaces.get(key); }
+  private:
+    
+    MarketComponentHolder<mql::CurrencyPair, Spot> mSpots;
+    MarketComponentHolder<mql::CurrencyPair, VolSurface> mVolSurfaces;
 
-      void SetSpot(mql::CurrencyPair const& key, SpotT spot) { return mSpots.set(key, std::move(spot)); }
-      void SetVolatilitySurface(mql::CurrencyPair const& key, VolSurfT volatilitySurface) { return mVolSurfaces.set(key, std::move(volatilitySurface)); }
-
-    private:
-      MarketComponentHolder<mql::CurrencyPair, SpotT> mSpots;
-      MarketComponentHolder<mql::CurrencyPair, VolSurfT> mVolSurfaces;
-
-    };
-  }
-  
+  };
+    
 }
 

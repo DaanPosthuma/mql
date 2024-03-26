@@ -12,8 +12,9 @@ using namespace std::string_literals;
 using namespace mql::literals;
 using mql::DateTime;
 using namespace std::chrono;
-using namespace mql;
-using namespace mql::fx_market;
+using mql::Spot;
+using mql::volatility_curves::FlatVolatilityCurve;
+using mql::volatility_surfaces::FXVolatilitySurface;
 
 namespace {
 
@@ -23,7 +24,7 @@ namespace {
     mql::FXMarket market;
 
     market.SetSpot("EURUSD"_pair, Spot(1.1, DateTime(January / 1 / 2023)));
-    market.SetVolatilitySurface("EURUSD"_pair, VolSurfT(VolCurveT(0.1_vol)));
+    market.SetVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol)));
 
     REQUIRE(market.GetSpot("EURUSD"_pair).rate == 1.1);
     REQUIRE(market.GetVolatilitySurface("EURUSD"_pair).getVolatility(DateTime(January / 1 / 2023), 1.0_K) == 0.1_vol);
