@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Spot.h"
+#include "Market/Market.h"
 #include "CurrencyAmountDateTime.h"
 #include "Trades/FXForward.h"
 
@@ -19,12 +19,20 @@ namespace mql::pricers {
     return CurrencyAmountDateTime(ccyTo, Amount(amountAtSpotDate * spotRate), spotDate);
   }
 
-  CurrencyAmountDateTime priceFXForward(mql::trades::FXForward const& fxForward, mql::Spot spot) {
-    
-    auto const ccySell = fxForward.GetCurrencyAmountSell().currency;
+  template <typename T>
+  concept SpotMarket = requires(T market, CurrencyPair currencyPair)
+  {
+    { market.getSpot(currencyPair) } -> std::same_as<Spot>;
+  };
 
-    auto const cashflowBuy = CurrencyAmountDateTime(fxForward.GetCurrencyAmountBuy(), fxForward.GetPaymentDateTime());
-    auto const cashflowSell = CurrencyAmountDateTime(fxForward.GetCurrencyAmountSell(), fxForward.GetPaymentDateTime());
+  CurrencyAmountDateTime priceFXForward(mql::trades::FXForward const& fxForward, const SpotMarket auto& market) {
+    
+    auto const ccyBuy = fxForward.getCurrencyAmountBuy().currency;
+    auto const ccySell = fxForward.getCurrencyAmountSell().currency;
+    auto const spot = market.getSpot(CurrencyPair(ccyBuy, ccySell));
+
+    auto const cashflowBuy = CurrencyAmountDateTime(fxForward.getCurrencyAmountBuy(), fxForward.getPaymentDateTime());
+    auto const cashflowSell = CurrencyAmountDateTime(fxForward.getCurrencyAmountSell(), fxForward.getPaymentDateTime());
     auto const a = DiscountAndSpotConvertCashflow(cashflowBuy, ccySell, spot);
     auto const b = DiscountCashflow(cashflowSell, spot.date);
 

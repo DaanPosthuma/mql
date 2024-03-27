@@ -15,7 +15,6 @@ namespace {
 
   TEST_CASE("All discount curves satisfy discount curve concept") {
     STATIC_REQUIRE(DiscountCurve<ConstantRateDiscountCurve>);
-    
   }
 
 }

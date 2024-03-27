@@ -23,13 +23,13 @@ namespace {
   TEST_CASE("Test FX Forward") {
 
     auto const cashflow = FXForward(50_usd, 40_eur, DateTime(January / 1 / 2024));
-    auto const [currencyBuy, amountBuy] = cashflow.GetCurrencyAmountBuy();
-    auto const [currencySell, amountSell] = cashflow.GetCurrencyAmountSell();
+    auto const [currencyBuy, amountBuy] = cashflow.getCurrencyAmountBuy();
+    auto const [currencySell, amountSell] = cashflow.getCurrencyAmountSell();
     REQUIRE(currencyBuy == "USD"_ccy);
     REQUIRE(currencySell == "EUR"_ccy);
     REQUIRE(amountBuy == 50.0);
     REQUIRE(amountSell == 40.0);
-    REQUIRE(cashflow.GetPaymentDateTime() == DateTime(January / 1 / 2024));
+    REQUIRE(cashflow.getPaymentDateTime() == DateTime(January / 1 / 2024));
 
   }
 

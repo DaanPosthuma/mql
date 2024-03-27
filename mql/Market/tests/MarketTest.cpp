@@ -23,11 +23,11 @@ namespace {
 
     mql::FXMarket market;
 
-    market.SetSpot("EURUSD"_pair, Spot(1.1, DateTime(January / 1 / 2023)));
-    market.SetVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol)));
+    market.setSpot("EURUSD"_pair, Spot(1.1, DateTime(January / 1 / 2023)));
+    market.setVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol)));
 
-    REQUIRE(market.GetSpot("EURUSD"_pair).rate == 1.1);
-    REQUIRE(market.GetVolatilitySurface("EURUSD"_pair).getVolatility(DateTime(January / 1 / 2023), 1.0_K) == 0.1_vol);
+    REQUIRE(market.getSpot("EURUSD"_pair).rate == 1.1);
+    REQUIRE(market.getVolatilitySurface("EURUSD"_pair).getVolatility(DateTime(January / 1 / 2023), 1.0_K) == 0.1_vol);
 
   }
 

@@ -3,6 +3,10 @@
 #include <unordered_map>
 #include <string>
 #include "CurrencyPair.h"
+#include "Spot.h"
+#include "VolatilityCurves/FlatVolatilityCurve.h"
+#include "VolatilitySurfaces/FXVolatilitySurface.h"
+#include "DiscountCurves/ConstantRateDiscountCurve.h"
 
 namespace mql {
 
@@ -35,21 +39,26 @@ namespace mql {
   public:
     
     using Spot = mql::Spot;
+    using DiscountCurve = mql::discount_curves::ConstantRateDiscountCurve;
     using VolCurve = mql::volatility_curves::FlatVolatilityCurve;
     using VolSurface = mql::volatility_surfaces::FXVolatilitySurface<VolCurve>;
 
-    [[nodiscard]] auto const& GetSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
-    [[nodiscard]] auto const& GetVolatilitySurface(mql::CurrencyPair const& key) const { return mVolSurfaces.get(key); }
+    [[nodiscard]] auto const& getSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
+    [[nodiscard]] auto const& getDiscountCurve(mql::Currency const& key) const { return mDiscountCurves.get(key); }
+    [[nodiscard]] auto const& getVolatilitySurface(mql::CurrencyPair const& key) const { return mVolSurfaces.get(key); }
 
-    [[nodiscard]] auto& GetSpot(mql::CurrencyPair const& key) { return mSpots.get(key); }
-    [[nodiscard]] auto& GetVolatilitySurface(mql::CurrencyPair const& key) { return mVolSurfaces.get(key); }
+    [[nodiscard]] auto& getSpot(mql::CurrencyPair const& key) { return mSpots.get(key); }
+    [[nodiscard]] auto& getDiscountCurve(mql::Currency const& key) { return mDiscountCurves.get(key); }
+    [[nodiscard]] auto& getVolatilitySurface(mql::CurrencyPair const& key) { return mVolSurfaces.get(key); }
 
-    void SetSpot(mql::CurrencyPair const& key, Spot spot) { return mSpots.set(key, std::move(spot)); }
-    void SetVolatilitySurface(mql::CurrencyPair const& key, VolSurface volatilitySurface) { return mVolSurfaces.set(key, std::move(volatilitySurface)); }
+    void setSpot(mql::CurrencyPair const& key, Spot spot) { return mSpots.set(key, std::move(spot)); }
+    void setDiscountCurve(mql::Currency const& key, DiscountCurve discountCurve) { return mDiscountCurves.set(key, std::move(discountCurve)); }
+    void setVolatilitySurface(mql::CurrencyPair const& key, VolSurface volatilitySurface) { return mVolSurfaces.set(key, std::move(volatilitySurface)); }
 
   private:
     
     MarketComponentHolder<mql::CurrencyPair, Spot> mSpots;
+    MarketComponentHolder<mql::Currency, DiscountCurve> mDiscountCurves;
     MarketComponentHolder<mql::CurrencyPair, VolSurface> mVolSurfaces;
 
   };
