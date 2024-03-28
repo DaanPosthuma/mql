@@ -23,7 +23,8 @@ namespace {
 
     mql::FXMarket market;
 
-    market.setSpot("EURUSD"_pair, Spot(1.1, DateTime(January / 1 / 2023)));
+    auto const pair = "EURUSD"_pair;
+    market.setSpot(pair, Spot(1.1, DateTime(January / 1 / 2023), pair));
     market.setVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol)));
 
     REQUIRE(market.getSpot("EURUSD"_pair).rate == 1.1);

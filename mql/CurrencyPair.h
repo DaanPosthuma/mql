@@ -1,38 +1,44 @@
 #pragma once
 
-#include <ostream>
 #include "Currency.h"
+#include <ostream>
+#include <cassert>
+
 
 namespace mql {
 
   class CurrencyPair {
   public:
-    constexpr explicit CurrencyPair(std::string currencyPair) noexcept : mCurrencyPair(currencyPair) {}
-    constexpr CurrencyPair(Currency base, Currency term) noexcept : mCurrencyPair(base.mCurrency + term.mCurrency) {}
+    Currency foreign;
+    Currency domestic;
+
+    constexpr CurrencyPair(Currency foreign, Currency domestic) noexcept : foreign(foreign), domestic(domestic) {}
 
   private:
-    friend std::ostream& operator<<(std::ostream& ostr, CurrencyPair currencyPair);
     friend bool operator==(CurrencyPair lhs, CurrencyPair rhs);
-    friend struct std::hash<mql::CurrencyPair>;
-
-    std::string mCurrencyPair;
+    
+    auto tie() const noexcept {
+      return std::tie(foreign, domestic);
+    }
 
   };
 
   inline bool operator==(CurrencyPair lhs, CurrencyPair rhs) {
-    return lhs.mCurrencyPair == rhs.mCurrencyPair;
+    return lhs.tie()  == rhs.tie();
   }
 
   inline std::ostream& operator<<(std::ostream& ostr, CurrencyPair currencyPair) {
-    ostr << "currencyPair(" << currencyPair.mCurrencyPair << ")";
+    ostr << "currencyPair(" << currencyPair.domestic.mCurrency << currencyPair.foreign.mCurrency << ")";
     return ostr;
   }
 
   inline namespace literals {
 
-    constexpr CurrencyPair operator""_pair(char const* currencyPair, std::size_t)
+    constexpr CurrencyPair operator""_pair(char const* currencyPair, std::size_t n)
     {
-      return CurrencyPair(currencyPair);
+      assert(n == 6);
+      return CurrencyPair(Currency(std::string() + currencyPair[0] + currencyPair[1] + currencyPair[2]),
+                          Currency(std::string() + currencyPair[3] + currencyPair[4] + currencyPair[5]));
     }
 
   }
@@ -44,7 +50,7 @@ namespace std {
   template <>
   struct hash<mql::CurrencyPair> {
     std::size_t operator()(mql::CurrencyPair pair) const {
-      return std::hash<std::string>{}(pair.mCurrencyPair);
+      return std::hash<mql::Currency>{}(pair.foreign);
     }
   };
 

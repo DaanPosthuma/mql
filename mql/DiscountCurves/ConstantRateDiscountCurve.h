@@ -18,7 +18,7 @@ namespace mql::discount_curves {
       int nbds = 200;
       int ndays = 360;
       double time = static_cast<double>(nbds) / ndays;
-      return DiscountFactor(std::exp(-static_cast<double>(mRate)*time));
+      return DiscountFactor(std::exp(-static_cast<double>(mRate)*time), from, to);
     }
 
   private:

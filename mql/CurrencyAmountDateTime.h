@@ -3,9 +3,12 @@
 #include "Currency.h"
 #include "Amount.h"
 #include "DateTime.h"
+#include "Spot.h"
 #include "CurrencyAmount.h"
+#include "DiscountFactor.h"
 #include <ostream>
 #include <tuple>
+#include <cassert>
 
 namespace mql {
 
@@ -51,23 +54,25 @@ namespace mql {
   private:
     friend std::ostream& operator<<(std::ostream& ostr, CurrencyAmountDateTime cadt) noexcept;
     friend bool operator==(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) noexcept;
+    friend CurrencyAmountDateTime operator * (CurrencyAmountDateTime const& cashflow, DiscountFactor const& discountFactor) noexcept;
+    friend CurrencyAmountDateTime operator * (CurrencyAmountDateTime const& cashflow, Spot const& spot) noexcept;
 
     auto tie() const noexcept {
       return std::tie(currency, amount, dateTime);
     }
   };
 
-  inline bool operator==(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) noexcept {
+  [[nodiscard]] inline bool operator==(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) noexcept {
     return lhs.tie() == rhs.tie();
   }
 
-  inline CurrencyAmountDateTime operator+(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
+  [[nodiscard]] inline CurrencyAmountDateTime operator+(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
     if (lhs.currency != rhs.currency) throw std::logic_error("Currencies not the same");
     if (lhs.dateTime != rhs.dateTime) throw std::logic_error("Dates not the same");
     return CurrencyAmountDateTime(lhs.currency, lhs.amount + rhs.amount, lhs.dateTime);
   }
 
-  inline CurrencyAmountDateTime operator-(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
+  [[nodiscard]] inline CurrencyAmountDateTime operator-(CurrencyAmountDateTime lhs, CurrencyAmountDateTime rhs) {
     if (lhs.currency != rhs.currency) throw std::logic_error("Currencies not the same");
     if (lhs.dateTime != rhs.dateTime) throw std::logic_error("Dates not the same");
     return CurrencyAmountDateTime(lhs.currency, lhs.amount - rhs.amount, lhs.dateTime);
@@ -76,6 +81,19 @@ namespace mql {
   inline std::ostream& operator<<(std::ostream& ostr, CurrencyAmountDateTime cadt) noexcept {
     ostr << "CurrencyAmountDateTime(" << cadt.currency << ", " << cadt.amount << ", " << cadt.dateTime << ")";
     return ostr;
+  }
+
+  [[nodiscard]] inline CurrencyAmountDateTime operator * (CurrencyAmountDateTime const& cashflow, DiscountFactor const& discountFactor) noexcept {
+    auto [currency, amount, dateTime] = cashflow;
+    return CurrencyAmountDateTime(currency, amount * discountFactor.discountFactor, discountFactor.to);
+  }
+
+  [[nodiscard]] inline CurrencyAmountDateTime operator * (CurrencyAmountDateTime const& cashflow, Spot const& spot) noexcept {
+    auto [spotRate, spotDate, currencyPair] = spot;
+    auto [currency, amount, cashflowDateTime] = cashflow;
+    assert(currencyPair.foreign == currency);
+    assert(spotDate == cashflowDateTime);
+    return CurrencyAmountDateTime(currencyPair.domestic, amount * spotRate, spotDate);
   }
 
 }

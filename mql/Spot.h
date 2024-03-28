@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DateTime.h"
+#include "CurrencyPair.h"
 #include <ostream>
 
 namespace mql {
@@ -9,10 +10,11 @@ namespace mql {
   public:
     double rate;
     DateTime date;
+    CurrencyPair currencyPair;
 
-    explicit constexpr Spot(double rate, DateTime date) : rate(rate), date(date) {}
+    explicit constexpr Spot(double rate, DateTime date, CurrencyPair currencyPair) : rate(rate), date(date), currencyPair(currencyPair) {}
 
-    static constexpr size_t tuple_size = 2;
+    static constexpr size_t tuple_size = 3;
 
     template<std::size_t N>
     struct tuple_element;
@@ -27,12 +29,19 @@ namespace mql {
       using type = decltype(date);
     };
 
+    template<>
+    struct tuple_element<2> {
+      using type = decltype(currencyPair);
+    };
+
     template<std::size_t N>
     auto get() const {
       if constexpr (N == 0)
         return rate;
       else if constexpr (N == 1)
         return date;
+      else if constexpr (N == 2)
+        return currencyPair;
     }
 
   private:

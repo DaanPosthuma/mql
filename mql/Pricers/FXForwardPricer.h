@@ -10,18 +10,12 @@ namespace mql::pricers {
 
   using mql::discount_curves::DiscountCurve;
   
-  auto DiscountCashflow(CurrencyAmountDateTime from, DateTime to, DiscountCurve auto const& curve) {
-    auto df = curve.computeDiscountFactor(from.dateTime, to);
-    from.dateTime = to;
-    from.amount = from.amount * static_cast<double>(df);
-    return from;
+  auto DiscountCashflow(CurrencyAmountDateTime const& cashflow, DateTime to, DiscountCurve auto const& curve) {
+    return cashflow * curve.computeDiscountFactor(cashflow.dateTime, to);
   }
 
-  auto DiscountAndSpotConvertCashflow(CurrencyAmountDateTime from, Currency ccyTo, Spot spotFromTo, DiscountCurve auto const& curve) {
-    auto const [spotRate, spotDate] = spotFromTo;
-    auto const [ccyFrom, amountAtSpotDate, _] = DiscountCashflow(from, spotFromTo.date, curve);
-
-    return CurrencyAmountDateTime(ccyTo, Amount(amountAtSpotDate * spotRate), spotDate);
+  auto DiscountAndSpotConvertCashflow(CurrencyAmountDateTime const& cashflow, Currency ccyTo, Spot const& spotFromTo, DiscountCurve auto const& curve) {
+    return DiscountCashflow(cashflow, spotFromTo.date, curve) * spotFromTo;
   }
 
   template <typename T>

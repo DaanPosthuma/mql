@@ -63,8 +63,10 @@ namespace {
 
   TEST_CASE("FX Forward pricer") {
     
+    auto const pair = "EURUSD"_pair;
+
     auto const market = TestingMarket("EUR"_ccy, "USD"_ccy, 
-                                      Spot(1.1, DateTime(January / 1 / 2023)),
+                                      Spot(1.1, DateTime(January / 1 / 2023), pair),
                                       ConstantRateDiscountCurve(Rate(0.0)),
                                       ConstantRateDiscountCurve(Rate(0.0))
     );

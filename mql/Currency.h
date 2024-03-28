@@ -14,6 +14,7 @@ namespace mql {
     friend bool operator==(Currency lhs, Currency rhs);
     friend class CurrencyPair;
     friend struct std::hash<mql::Currency>;
+    friend std::ostream& operator<<(std::ostream& ostr, CurrencyPair currencyPair);
 
     std::string mCurrency;
 
