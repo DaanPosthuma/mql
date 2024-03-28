@@ -1,5 +1,6 @@
 ﻿#include "Spot.h"
 #include "CurrencyPair.h"
+#include "DiscountCurves/ConstantRateDiscountCurve.h"
 #include "Pricers/CashflowPricer.h"
 #include "Pricers/FXForwardPricer.h"
 #include <catch2/catch_test_macros.hpp>
@@ -11,21 +12,41 @@ namespace {
   using namespace mql::literals;
   using namespace mql::trades;
   using namespace mql;
+  using mql::discount_curves::ConstantRateDiscountCurve;
   using namespace std::chrono;
 
-  class SingleCurrencyPairMarket {
+  class TestingMarket {
   public:
-    SingleCurrencyPairMarket(Currency currencyBase, Currency currencyTerm, Spot spot) : mSpot(spot), mCurrencyBase(currencyBase), mCurrencyTerm(currencyTerm) {}
+    TestingMarket(Currency currencyBase, 
+                  Currency currencyTerm, 
+                  Spot spot,
+                  ConstantRateDiscountCurve curveBase,
+                  ConstantRateDiscountCurve curveTerm
+    ) : mSpot(spot), mCurrencyBase(currencyBase), mCurrencyTerm(currencyTerm), mCurveBase(curveBase), mCurveTerm(curveTerm) {}
 
-    [[nodiscard]] Spot getSpot(CurrencyPair pair) const {
+    [[nodiscard]] auto getSpot(CurrencyPair pair) const {
       REQUIRE(pair == CurrencyPair(mCurrencyBase, mCurrencyTerm));
       return mSpot;
+    }
+
+    [[nodiscard]] auto getDiscountCurve(Currency currency) const {
+
+      if (currency == mCurrencyBase) {
+        return mCurveBase;
+      }
+      else {
+        REQUIRE(currency == mCurrencyTerm);
+        return mCurveTerm;
+      }
+
     }
 
   private:
     Currency mCurrencyBase;
     Currency mCurrencyTerm;
     Spot mSpot;
+    ConstantRateDiscountCurve mCurveBase;
+    ConstantRateDiscountCurve mCurveTerm;
 
   };
 
@@ -42,7 +63,11 @@ namespace {
 
   TEST_CASE("FX Forward pricer") {
     
-    auto const market = SingleCurrencyPairMarket("EUR"_ccy, "USD"_ccy, Spot(1.1, DateTime(January / 1 / 2023)));
+    auto const market = TestingMarket("EUR"_ccy, "USD"_ccy, 
+                                      Spot(1.1, DateTime(January / 1 / 2023)),
+                                      ConstantRateDiscountCurve(Rate(0.0)),
+                                      ConstantRateDiscountCurve(Rate(0.0))
+    );
 
     auto const fxForward = FXForward(100_eur, 110_usd, July / 8 / 2024);
     auto const price = mql::pricers::priceFXForward(fxForward, market);

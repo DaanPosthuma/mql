@@ -8,6 +8,8 @@ namespace mql {
   public:
     explicit DiscountFactor(double discountFactor) : mDiscountFactor(discountFactor) {}
 
+    explicit operator double() const noexcept { return mDiscountFactor; } // actually need utility function to discount cashflows instead, no need to expose double
+
   private:
     friend bool operator == (DiscountFactor lhs, DiscountFactor rhs) noexcept;
     friend std::ostream& operator<<(std::ostream& ostr, DiscountFactor discountFactor) noexcept;
