@@ -10,21 +10,23 @@ namespace mql {
   public:
     constexpr explicit Currency(std::string currency) noexcept : mCurrency(currency) {}
   private:
-    friend std::ostream& operator<<(std::ostream& ostr, Currency currency);
-    friend bool operator==(Currency lhs, Currency rhs);
-    friend class CurrencyPair;
+    friend std::ostream& operator<<(std::ostream& ostr, Currency const& currency);
+    friend std::ostream& operator<<(std::ostream& ostr, CurrencyPair const& currencyPair);
+    friend bool operator==(Currency const& lhs, Currency const& rhs);
     friend struct std::hash<mql::Currency>;
-    friend std::ostream& operator<<(std::ostream& ostr, CurrencyPair currencyPair);
+    friend struct std::hash<mql::CurrencyPair>;
+    
+    friend class CurrencyPair;
 
     std::string mCurrency;
 
   };
 
-  inline bool operator==(Currency lhs, Currency rhs) {
+  inline bool operator==(Currency const& lhs, Currency const& rhs) {
     return lhs.mCurrency == rhs.mCurrency;
   }
 
-  inline std::ostream& operator<<(std::ostream& ostr, Currency currency) {
+  inline std::ostream& operator<<(std::ostream& ostr, Currency const& currency) {
     ostr << "currency(" << currency.mCurrency << ")";
     return ostr;
   }
@@ -44,8 +46,12 @@ namespace std {
 
   template <>
   struct hash<mql::Currency> {
-    std::size_t operator()(mql::Currency currency) const {
-      return std::hash<std::string>{}(currency.mCurrency);
+    std::size_t operator()(mql::Currency const& currency) const {
+      unsigned int h = 2166136261;
+      for (char c : currency.mCurrency) {
+        h = (h * 16777619) ^ c;
+      }
+      return h;
     }
   };
 
