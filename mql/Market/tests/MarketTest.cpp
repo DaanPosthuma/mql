@@ -24,8 +24,11 @@ namespace {
     mql::FXMarket market;
 
     auto const pair = "EURUSD"_pair;
+    mql::discount_curves::ConstantRateDiscountCurve curveFor(mql::Rate(0.0));
+    mql::discount_curves::ConstantRateDiscountCurve curveDom(mql::Rate(0.0));
+
     market.setSpot(pair, Spot(1.1, DateTime(January / 1 / 2023), pair));
-    market.setVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol)));
+    market.setVolatilitySurface("EURUSD"_pair, FXVolatilitySurface(FlatVolatilityCurve(0.1_vol), curveFor, curveDom));
 
     REQUIRE(market.getSpot("EURUSD"_pair).rate == 1.1);
     REQUIRE(market.getVolatilitySurface("EURUSD"_pair).getVolatility(DateTime(January / 1 / 2023), 1.0_K) == 0.1_vol);

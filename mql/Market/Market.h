@@ -41,7 +41,7 @@ namespace mql {
     using Spot = mql::Spot;
     using DiscountCurve = mql::discount_curves::ConstantRateDiscountCurve;
     using VolCurve = mql::volatility_curves::FlatVolatilityCurve;
-    using VolSurface = mql::volatility_surfaces::FXVolatilitySurface<VolCurve>;
+    using VolSurface = mql::volatility_surfaces::FXVolatilitySurface<VolCurve, DiscountCurve, DiscountCurve>;
 
     [[nodiscard]] auto const& getSpot(mql::CurrencyPair const& key) const { return mSpots.get(key); }
     [[nodiscard]] auto const& getDiscountCurve(mql::Currency const& key) const { return mDiscountCurves.get(key); }
